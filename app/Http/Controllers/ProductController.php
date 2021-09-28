@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -41,10 +41,30 @@ class ProductController extends Controller
     {
         $product = new Product();
         $product->name = $request->input('name');
+        $nameV = Str::contains($product->name, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']);
+        if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $product->name))
+            {
+                $nameV = true;
+            }
         $product->price = $request->input('price');
         $product->color = $request->input('color');
-        $product->save();
-        echo json_encode($product);
+        $colorV = Str::contains($product->color, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']);
+        if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $product->color))
+            {
+                $colorV = true;
+            }
+
+
+        if($nameV || $colorV){
+
+            abort(405, "Number or Special Character in parameter name or price");
+        }
+        else{
+            $product->save();
+            echo json_encode($product);
+        }
+
+
     }
 
 
