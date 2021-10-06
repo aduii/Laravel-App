@@ -48,6 +48,7 @@ class ProductController extends Controller
             }
         $product->price = $request->input('price');
         $product->color = $request->input('color');
+        $product->date_input = $request->input('date_input');
         $colorV = Str::contains($product->color, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']);
         if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $product->color))
             {
@@ -81,6 +82,7 @@ class ProductController extends Controller
         $product->name = $request->input('name');
         $product->price = $request->input('price');
         $product->color = $request->input('color');
+        $product->date_input = $request->input('date_input');
         $product->save();
         echo json_encode($product);
     }
