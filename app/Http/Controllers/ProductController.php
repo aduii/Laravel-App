@@ -47,22 +47,27 @@ class ProductController extends Controller
                 $nameV = true;
             }
         $product->price = $request->input('price');
-        $product->color = $request->input('color');
+        $product->type = $request->input('type');
         $product->date_input = $request->input('date_input');
-        $colorV = Str::contains($product->color, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']);
-        if (preg_match('/[\'^£$%&*()}{@#~?><>,|=_+¬-]/', $product->color))
-            {
-                $colorV = true;
-            }
+        // $typeV = Str::containsAll($product->type, ["Comestible", "No"]);
+        // $typeV = Str::containsAll($product->type, 'Comestible');
+        $typeV = false;
+        if($product->type == "Comestible" || $product->type == "No Comestible"){
+            $typeV = true;
+        }
 
 
-        if($nameV || $colorV){
+        if($nameV){
 
-            abort(405, "Number or Special Character in parameter name or price");
+            abort(405, "Number or Special Character in parameter name");
+        }
+        if(!$typeV){
+            abort(405, "Wrong input in parameter type. Only try with [Comestible] and [No comestible]");
         }
         else{
             $product->save();
             echo json_encode($product);
+
         }
 
 
@@ -81,7 +86,7 @@ class ProductController extends Controller
         $product = Product::find($product_id);
         $product->name = $request->input('name');
         $product->price = $request->input('price');
-        $product->color = $request->input('color');
+        $product->type = $request->input('type');
         $product->date_input = $request->input('date_input');
         $product->save();
         echo json_encode($product);
